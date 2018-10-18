@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        html, body {
+            margin: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            /*cursor: none;*/
+            background: black;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+    var ctx = document.getElementById('canvas'),
+        context = ctx.getContext('2d'),
+    //绘制椭圆
+    function ParamEllipse(context, x, y, a, b) {
+                //max是等于1除以长轴值a和b中的较大者
+             //i每次循环增加1/max，表示度数的增加
+            //这样可以使得每次循环所绘制的路径（弧线）接近1像素
+             var step = (a > b) ? 1 / a : 1 / b;
+             context.fillStyle = "#ff0000";
+            context.beginPath();
+           context.moveTo(x + a, y); //从椭圆的左端点开始绘制
+            for (var i = 0; i < 2 * Math.PI; i += step) {
+                //参数方程为x = a * cos(i), y = b * sin(i)，
+                //参数为i，表示度数（弧度）
+                context.lineTo(x + a * Math.cos(i), y + b * Math.sin(i));
+            }
+           context.closePath();
+            context.stroke();
+            context.fill();
+            context.closePath();
+         };
+
+        //绘制矩形
+        function FillRect(context, x, y, w, h, flag) {
+            var grd = context.createLinearGradient(x+w/2, y, x + w/2, y + h);
+           if (flag) {
+                 grd.addColorStop(0, "yellow");
+                 grd.addColorStop(1, "red");
+             } else {
+                 grd.addColorStop(0, "red");
+                 grd.addColorStop(1, "yellow");
+             }
+             context.fillStyle = grd;
+             context.fillRect(x, y, w, h);
+        }
+
+         //绘制线条
+        function SetLine(ctx, x, y, x1, y1) {
+             ctx.beginPath();
+             ctx.strokeStyle = "yellow";
+             ctx.moveTo(x,y);
+            ctx.lineTo(x1,y1);
+             ctx.stroke();
+            ctx.closePath();
+        }
+        window.onload = function () {
+            var c = document.getElementById("myCanvas");
+           var ctx = c.getContext("2d");
+            var startX = 150; //中心坐标x
+            var startY = 300; //中心坐标y
+           var pWidth = 120; //椭圆长轴
+            var pHeigth = 80; //椭圆形短轴
+           var fWidth = 120; //矩形宽
+           var fheight = 40; //矩形高
+           //绘制椭圆
+           ParamEllipse(ctx, startX, startY, pWidth, pHeigth);
+           //在椭圆上方和下方绘制长方形，且有一半的高度和椭圆重叠
+           FillRect(ctx, startX - fWidth / 2, startY - pHeigth - (fheight / 2), fWidth, fheight, true);
+           FillRect(ctx, startX - fWidth / 2, startY + pHeigth - (fheight / 2), fWidth, fheight, false);
+           //在矩形下方绘制线条,8个单位一条线,长度为40，均匀分布在矩形下方
+           var lLen = fheight; //画线的范围始终在矩形之下
+           var lInterval = 8; //线与线之间的间隔
+          for (var i = 0; i < (fWidth / 8) + 1; i++) {
+               SetLine(ctx, startX - fWidth / 2 + i * lInterval, startY + pHeigth + fheight / 2, startX - fWidth / 2 + i * lInterval, startY + pHeigth + fheight / 2 + lLen);
+           }
+           //对三部分进行拆解
+           //1. 上矩形 
+           var right = 380;
+          FillRect(ctx, startX - fWidth / 2 + right, startY - pHeigth - (fheight / 2) - 150, fWidth, fheight, true);
+           //2. 中椭圆
+            ParamEllipse(ctx, startX + right, startY - 50, pWidth, pHeigth);
+            //3. 下矩形
+             FillRect(ctx, startX - fWidth / 2 + right, startY + pHeigth - (fheight / 2) + 50, fWidth, fheight, false);
+            //4. 下线
+            for (var i = 0; i < (fWidth / 8) + 1; i++) {
+                SetLine(ctx, startX - fWidth / 2 + i * lInterval + right, startY + pHeigth + fheight / 2 + 100, startX - fWidth / 2 + i * lInterval + right, startY + pHeigth + fheight / 2 + lLen + 100);
+            }
+            //画线，将其连接起来
+            var lsX = startX + pWidth + 20;
+            var lsY = startY;
+            var leX = startX + pWidth + 20 + 100;
+            var leY = startY;
+            SetLine(ctx, lsX, startY - 30, leX - 30, leY - 150);
+           SetLine(ctx, lsX, startY - 15, leX, leY - 50);
+             SetLine(ctx, lsX, startY + 15, leX, leY + 100);
+            SetLine(ctx, lsX, startY + 30, leX - 30, leY + 150);
+
+             //左上标写上说明
+             ctx.font = "35px Arial";
+            var t = "灯笼组成--2016-11-13";
+            ctx.fillText(t, 50, 50);
+        }
+</script>
+</body>
+</html>
