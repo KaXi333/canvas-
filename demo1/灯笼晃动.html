@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=" utf-8">
+<meta name="author" content="http://www.softwhy.com/" />
+<title>灯笼晃动</title>
+<style>
+html,body,canvas{
+  width:100vw;
+  height:100vh;
+  background:#000000;
+  overflow:hidden;
+}
+</style>
+<canvas id="canvas"></canvas>
+<script>
+setTimeout(() => {
+  let canvas = document.querySelector('canvas');
+  let context = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+ 
+  let pointer = {
+    x: canvas.width / 2,
+    y: canvas.height / 4
+  };
+ 
+  let angleInit = 0;
+  let angle;
+  let speed=5000;
+ 
+  // let render = function () {
+  //   context.clearRect(0, 0, canvas.width, canvas.height);   
+  //   // 小球
+  //   context.save();
+  //   context.fillStyle = "green";
+  //   context.translate(pointer.x, pointer.y);
+  //   context.rotate(angle);
+  //   context.beginPath();
+  //   context.arc(0, 200, 30, 0, 2 * Math.PI, false);
+  //   context.fill();
+ 
+  //   context.strokeStyle = "gray";
+  //   context.lineWidth = 2;
+  //   context.beginPath();
+  //   context.moveTo(0, 0);
+  //   context.lineTo(0, 200);
+  //   context.stroke();
+  //   context.restore();
+  // };
+  var img = new Image();   // 创建img元素
+  var img2 = new Image();   // 创建img元素
+  img.src = 'images/333.png';
+  img2.src = 'images/333.png';
+
+  img.onload = function(){
+        run();
+  }
+  
+  let render = function () { 
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.save();
+    context.translate(pointer.x, pointer.y);
+    context.rotate(angle);
+    context.drawImage(img,0,0);
+    context.strokeStyle = "rgb(235,125,94)";
+    context.lineWidth = 4;
+    context.beginPath();
+    context.moveTo(32, 5);
+    context.lineTo(32, -20);
+    context.stroke();
+
+    context.save();
+    context.rotate(angle/6);
+    context.drawImage(img2,0,120);
+    context.strokeStyle = "rgb(235,125,94)";
+    context.lineWidth = 4;
+    context.beginPath();
+    context.moveTo(32, 125);
+    context.lineTo(32, 100);
+    context.stroke();
+
+    context.restore();
+    context.restore();
+  };
+  let reverse = false;
+  let run;
+  //运动函数
+  run = (time) => {
+    if (!time) {
+      angle = angleInit;
+    }
+   angle = angle-0.01/1.5
+   if(angle<-0.50){
+    cancelAnimationFrame(stop);
+      run2();
+   }else{
+    console.log(angle)
+     render();
+     requestAnimationFrame(run)
+   }
+   
+  }
+  //运动函数
+  function run2(time){
+    console.log(angle)
+    if(angle>-0.25){
+      cancelAnimationFrame(stop);
+      run3();
+    }else{
+      angle = angle+0.01/2
+      render();
+      requestAnimationFrame(run2)
+    }
+    
+  }
+  //运动函数
+  function run3(time){
+    if(angle<-0.90){
+      cancelAnimationFrame(stop);
+      run4();
+    }else{
+     angle = angle-0.01
+      console.log(angle)
+      render();
+      requestAnimationFrame(run3) 
+    }
+  }
+  //运动函数
+  function run4(time){
+    if(angle>0.15){
+      cancelAnimationFrame(stop);
+      run5();
+    }else{
+     angle = angle+0.01/1.4
+      console.log(angle)
+      render();
+      requestAnimationFrame(run4) 
+    }
+  }
+   //运动函数
+  function run5(time){
+    if(angle<-0.1){
+      cancelAnimationFrame(stop);
+      run6();
+    }else{
+     angle = angle-0.01/3
+      console.log(angle)
+      render();
+      requestAnimationFrame(run5) 
+    }
+  }
+   //运动函数
+  function run6(time){
+    if(angle>0){
+      cancelAnimationFrame(stop);
+      setTimeout(function(){
+        run();
+      },1000)
+    }else{
+     angle = angle+0.01/5
+      console.log(angle)
+      render();
+      requestAnimationFrame(run6) 
+    }
+  }
+}, 500);
+</script>
+</head>
+<body>
+<canvas></canvas>
+</body>
+</html>
