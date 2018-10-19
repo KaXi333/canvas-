@@ -50,8 +50,10 @@ setTimeout(() => {
   // };
   var img = new Image();   // 创建img元素
   var img2 = new Image();   // 创建img元素
+  var img3 = new Image();   // 创建img元素
   img.src = 'images/333.png';
   img2.src = 'images/333.png';
+  img3.src = 'images/555.png';
 
   img.onload = function(){
         run();
@@ -80,6 +82,21 @@ setTimeout(() => {
     context.lineTo(32, 100);
     context.stroke();
 
+    context.save();
+    context.translate(-10, 223);
+    context.rotate(angle/500);
+    context.drawImage(img3,0,0);
+    // context.fillStyle = 'red';
+    // context.fillRect( 0, 250, 100, 200 );
+    // context.translate(300, 250);
+    // context.rotate(90*Math.PI/180);
+    // context.font = "italic 35px 黑体";
+    // context.fillStyle = "blue";
+    // context.fillText("锦鲤时间",0,290,200);
+
+    
+
+    context.restore();
     context.restore();
     context.restore();
   };
